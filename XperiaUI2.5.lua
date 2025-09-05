@@ -516,288 +516,6 @@ function Library.new(config)
 		end
 	end)
 
-	-- Dropdown System
-	task.spawn(function()
-		local DropdownFrame = Instance.new("Frame")
-		local UICorner = Instance.new("UICorner")
-		local MiniDropShadow = Instance.new("ImageLabel")
-		local UIStroke = Instance.new("UIStroke")
-		local ValueId = Instance.new("TextLabel")
-		local ScrollingFrame = Instance.new("ScrollingFrame")
-		local UIListLayout = Instance.new("UIListLayout")
-
-		DropdownFrame.Name = "DropdownFrame"
-		DropdownFrame.Parent = ScreenGui
-		DropdownFrame.BackgroundColor3 = ModernColors.Primary
-		DropdownFrame.BackgroundTransparency = 1
-		DropdownFrame.BorderSizePixel = 0
-		DropdownFrame.Position = UDim2.new(0, 289, 0, 213)
-		DropdownFrame.Size = UDim2.new(0, 150, 0, 145)
-		DropdownFrame.ZIndex = 100
-		DropdownFrame.Visible = false
-
-		UICorner.CornerRadius = UDim.new(0, 6)
-		UICorner.Parent = DropdownFrame
-
-		MiniDropShadow.Name = "MiniDropShadow"
-		MiniDropShadow.Parent = DropdownFrame
-		MiniDropShadow.AnchorPoint = Vector2.new(0.5, 0.5)
-		MiniDropShadow.BackgroundTransparency = 1
-		MiniDropShadow.BorderSizePixel = 0
-		MiniDropShadow.Position = UDim2.new(0.5, 0, 0.5, 0)
-		MiniDropShadow.Size = UDim2.new(1, 30, 1, 30)
-		MiniDropShadow.ZIndex = 99
-		MiniDropShadow.Image = "rbxassetid://6015897843"
-		MiniDropShadow.ImageColor3 = ModernColors.Shadow
-		MiniDropShadow.ImageTransparency = 0.6
-		MiniDropShadow.ScaleType = Enum.ScaleType.Slice
-		MiniDropShadow.SliceCenter = Rect.new(49, 49, 450, 450)
-
-		UIStroke.Transparency = 0.9
-		UIStroke.Color = ModernColors.Border
-		UIStroke.Parent = DropdownFrame
-
-		ValueId.Name = "ValueId"
-		ValueId.Parent = DropdownFrame
-		ValueId.AnchorPoint = Vector2.new(0.5, 0)
-		ValueId.BackgroundTransparency = 1
-		ValueId.Position = UDim2.new(0.5, 0, 0, 0)
-		ValueId.Size = UDim2.new(0.97, 0, 0.5, 0)
-		ValueId.ZIndex = 101
-		ValueId.Font = Enum.Font.GothamBold
-		ValueId.Text = "NONE"
-		ValueId.TextColor3 = ModernColors.Text
-		ValueId.TextScaled = true
-		ValueId.TextTransparency = 0.8
-		ValueId.TextWrapped = true
-		ValueId.TextXAlignment = Enum.TextXAlignment.Right
-
-		ScrollingFrame.Parent = DropdownFrame
-		ScrollingFrame.Active = true
-		ScrollingFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-		ScrollingFrame.BackgroundTransparency = 1
-		ScrollingFrame.BorderSizePixel = 0
-		ScrollingFrame.Position = UDim2.new(0.5, 0, 0.556, 0)
-		ScrollingFrame.Size = UDim2.new(0.95, 0, 0.888, 0)
-		ScrollingFrame.ZIndex = 102
-		ScrollingFrame.BottomImage = ""
-		ScrollingFrame.ScrollBarThickness = 1
-		ScrollingFrame.TopImage = ""
-
-		UIListLayout.Parent = ScrollingFrame
-		UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-		UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-		UIListLayout.Padding = UDim.new(0, 4)
-
-		local Locked = nil
-		local Looped = false
-
-		local function GetSelector(title,value)
-			local Selector = Instance.new("Frame")
-			local UICorner = Instance.new("UICorner")
-			local TitleLabel = Instance.new("TextLabel")
-			local Frame = Instance.new("Frame")
-			local UICorner_2 = Instance.new("UICorner")
-			local Button = Instance.new("TextButton")
-			local UIStroke = Instance.new("UIStroke")
-
-			Selector.Name = "Selector"
-			Selector.Parent = ScrollingFrame
-			Selector.BackgroundColor3 = ModernColors.Accent
-			Selector.BackgroundTransparency = 0.75
-			Selector.BorderSizePixel = 0
-			Selector.ClipsDescendants = true
-			Selector.Size = UDim2.new(0.97, 0, 0.5, 0)
-			Selector.ZIndex = 103
-
-			UICorner.CornerRadius = UDim.new(0, 3)
-			UICorner.Parent = Selector
-
-			TitleLabel.Name = "Title"
-			TitleLabel.Parent = Selector
-			TitleLabel.AnchorPoint = Vector2.new(0, 0.5)
-			TitleLabel.BackgroundTransparency = 1
-			TitleLabel.Position = UDim2.new(0.025, 0, 0.5, 0)
-			TitleLabel.Size = UDim2.new(1, 0, 0.5, 0)
-			TitleLabel.ZIndex = 104
-			TitleLabel.Font = Enum.Font.GothamBold
-			TitleLabel.Text = title
-			TitleLabel.TextColor3 = ModernColors.Text
-			TitleLabel.TextScaled = true
-			TitleLabel.TextWrapped = true
-			TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
-
-			Frame.Parent = Selector
-			Frame.AnchorPoint = Vector2.new(1, 0.5)
-			Frame.BackgroundColor3 = ModernColors.Text
-			Frame.BackgroundTransparency = 0.6
-			Frame.BorderSizePixel = 0
-			Frame.Position = UDim2.new(1.025, 0, 0.5, 0)
-			Frame.Size = UDim2.new(0.055, 0, 0.7, 0)
-			Frame.ZIndex = 104
-
-			UICorner_2.CornerRadius = UDim.new(0, 3)
-			UICorner_2.Parent = Frame
-
-			Button.Name = "Button"
-			Button.Parent = Selector
-			Button.BackgroundTransparency = 1
-			Button.Size = UDim2.new(1, 0, 1, 0)
-			Button.ZIndex = 105
-			Button.Font = Enum.Font.SourceSans
-			Button.Text = ""
-			Button.TextTransparency = 1
-
-			UIStroke.Transparency = 0.9
-			UIStroke.Color = ModernColors.Border
-			UIStroke.Parent = Selector
-
-			local function SetActive(active)
-				if active then
-					TweenService:Create(Frame,TweenInfo.new(0.1),{
-						Position = UDim2.new(1.025, 0, 0.5, 0)
-					}):Play()
-					TweenService:Create(TitleLabel,TweenInfo.new(0.1),{
-						TextTransparency = 0
-					}):Play()
-				else
-					TweenService:Create(Frame,TweenInfo.new(0.1),{
-						Position = UDim2.new(1.125, 0, 0.5, 0)
-					}):Play()
-					TweenService:Create(TitleLabel,TweenInfo.new(0.1),{
-						TextTransparency = 0.25
-					}):Play()
-				end
-			end
-
-			SetActive(value)
-
-			return {
-				SetActive = SetActive,
-				Button = Button,
-				Destroy = function()
-					Selector:Destroy()
-				end
-			}
-		end
-
-		local MouseInFrame = false
-		local MouseInMyFrame = false
-
-		function WindowTable.Dropdown:Setup(target_frame)
-			Locked = target_frame
-		end
-
-		function WindowTable.Dropdown:Open(args,default,callback)
-			Looped = true
-			ValueId.Text = tostring(default)
-
-			TweenService:Create(DropdownFrame,TweenInfo.new(0.3),{
-				BackgroundTransparency = 0.1
-			}):Play()
-
-			TweenService:Create(MiniDropShadow,TweenInfo.new(0.3),{
-				ImageTransparency = 0.4
-			}):Play()
-
-			TweenService:Create(ValueId,TweenInfo.new(0.3),{
-				TextTransparency = 0.8
-			}):Play()
-
-			TweenService:Create(UIStroke,TweenInfo.new(0.3),{
-				Transparency = 0.8
-			}):Play()
-
-			for i,v in pairs(ScrollingFrame:GetChildren()) do
-				if v:IsA('Frame') then
-					v:Destroy()
-				end
-			end
-
-			local list = {}
-
-			for i,v in pairs(args) do
-				local selector = GetSelector(tostring(v),v == default)
-
-				selector.Button.MouseButton1Click:Connect(function()
-					for i,s in ipairs(list) do
-						if s[1] == v then
-							s[2].SetActive(true)
-						else
-							s[2].SetActive(false)
-						end
-					end
-					ValueId.Text = tostring(v)
-					callback(v)
-				end)
-
-				table.insert(list,{v,selector})
-			end
-		end
-
-		function WindowTable.Dropdown:Close()
-			Looped = false
-			
-			TweenService:Create(UIStroke,TweenInfo.new(0.3),{
-				Transparency = 1
-			}):Play()
-			
-			TweenService:Create(DropdownFrame,TweenInfo.new(0.3),{
-				BackgroundTransparency = 1
-			}):Play()
-
-			TweenService:Create(MiniDropShadow,TweenInfo.new(0.3),{
-				ImageTransparency = 1
-			}):Play()
-
-			TweenService:Create(ValueId,TweenInfo.new(0.3),{
-				TextTransparency = 1
-			}):Play()
-
-			for i,v in pairs(ScrollingFrame:GetChildren()) do
-				if v:IsA('Frame') then
-					v:Destroy()
-				end
-			end
-		end
-
-		MainFrame.MouseEnter:Connect(function()
-			MouseInFrame = true
-		end)
-		
-		MainFrame.MouseLeave:Connect(function()
-			MouseInFrame = false
-		end)
-
-		DropdownFrame.MouseEnter:Connect(function()
-			MouseInMyFrame = true
-		end)
-		
-		DropdownFrame.MouseLeave:Connect(function()
-			MouseInMyFrame = false
-		end)
-
-		UserInputService.InputBegan:Connect(function(keycode)
-			if keycode.UserInputType == Enum.UserInputType.MouseButton1 or keycode.UserInputType == Enum.UserInputType.Touch then
-				if not MouseInFrame and not MouseInMyFrame then
-					WindowTable.Dropdown:Close()
-				end
-			end
-		end)
-
-		game:GetService('RunService'):BindToRenderStep('__MODERN_DROPDOWN__',Enum.RenderPriority.Camera.Value,function()
-			if Looped and Locked then
-				local pos = Locked.AbsolutePosition
-				local size = Locked.AbsoluteSize
-				DropdownFrame.Position = UDim2.new(0,pos.X,0,pos.Y + size.Y)
-				DropdownFrame.Size = UDim2.new(0,size.X,0,145)
-				DropdownFrame.Visible = true
-			else
-				DropdownFrame.Visible = false
-			end
-		end)
-	end)
-
 	-- Tab System
 	function WindowTable:Tab(title,icon)
 		local Tab = {
@@ -938,7 +656,7 @@ function Library.new(config)
 
 		-- Auto-resize container
 		UIListLayout:GetPropertyChangedSignal('AbsoluteContentSize'):Connect(function()
-			Container.CanvasSize = UDim2.new(0, 0, 0, UIListLayout.AbsoluteContentSize.Y + 10)
+			Container.CanCanvasSize = UDim2.new(0, 0, 0, UIListLayout.AbsoluteContentSize.Y + 10)
 		end)
 
 		-- Add to tabs
@@ -1495,11 +1213,108 @@ function Library.new(config)
 				end)
 
 				DropdownButton.MouseButton1Click:Connect(function()
-					WindowTable.Dropdown:Setup(DropdownFrame)
-					WindowTable.Dropdown:Open(Dropdown.Options, Dropdown.Value, function(value)
-						Dropdown.Value = value
-						ValueLabel.Text = tostring(value)
-						Dropdown.Callback(value)
+					-- Create dropdown menu
+					local DropdownMenu = Instance.new("Frame")
+					local UIListLayout = Instance.new("UIListLayout")
+					local UICorner = Instance.new("UICorner")
+					local UIStroke = Instance.new("UIStroke")
+
+					DropdownMenu.Name = "DropdownMenu"
+					DropdownMenu.Parent = DropdownFrame
+					DropdownMenu.BackgroundColor3 = ModernColors.Primary
+					DropdownMenu.BackgroundTransparency = 0.1
+					DropdownMenu.BorderSizePixel = 0
+					DropdownMenu.Position = UDim2.new(0, 0, 1, 5)
+					DropdownMenu.Size = UDim2.new(1, 0, 0, 0)
+					DropdownMenu.ZIndex = 5
+					DropdownMenu.ClipsDescendants = true
+
+					UICorner.CornerRadius = UDim.new(0, 3)
+					UICorner.Parent = DropdownMenu
+
+					UIStroke.Thickness = 1
+					UIStroke.Color = ModernColors.Border
+					UIStroke.Transparency = 0.8
+					UIStroke.Parent = DropdownMenu
+
+					UIListLayout.Parent = DropdownMenu
+					UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+					-- Create options
+					for _, option in ipairs(Dropdown.Options) do
+						local OptionButton = Instance.new("TextButton")
+						local UICorner = Instance.new("UICorner")
+
+						OptionButton.Name = option
+						OptionButton.Parent = DropdownMenu
+						OptionButton.BackgroundColor3 = ModernColors.Accent
+						OptionButton.BackgroundTransparency = 0.8
+						OptionButton.BorderSizePixel = 0
+						OptionButton.Size = UDim2.new(1, 0, 0, 25)
+						OptionButton.Font = Enum.Font.GothamBold
+						OptionButton.Text = option
+						OptionButton.TextColor3 = ModernColors.Text
+						OptionButton.TextSize = 14
+						OptionButton.TextTransparency = 0.25
+						OptionButton.AutoButtonColor = false
+						OptionButton.ZIndex = 6
+
+						UICorner.CornerRadius = UDim.new(0, 3)
+						UICorner.Parent = OptionButton
+
+						OptionButton.MouseEnter:Connect(function()
+							TweenService:Create(OptionButton, TweenInfo.new(0.2), {
+								BackgroundTransparency = 0.7,
+								TextTransparency = 0
+							}):Play()
+						end)
+
+						OptionButton.MouseLeave:Connect(function()
+							TweenService:Create(OptionButton, TweenInfo.new(0.2), {
+								BackgroundTransparency = 0.8,
+								TextTransparency = 0.25
+							}):Play()
+						end)
+
+						OptionButton.MouseButton1Click:Connect(function()
+							Dropdown.Value = option
+							ValueLabel.Text = option
+							Dropdown.Callback(option)
+							
+							-- Close dropdown
+							TweenService:Create(DropdownMenu, TweenInfo.new(0.2), {
+								Size = UDim2.new(1, 0, 0, 0)
+							}):Play()
+							task.wait(0.2)
+							DropdownMenu:Destroy()
+						end)
+					end
+
+					-- Open dropdown
+					local height = #Dropdown.Options * 25
+					TweenService:Create(DropdownMenu, TweenInfo.new(0.2), {
+						Size = UDim2.new(1, 0, 0, height)
+					}):Play()
+
+					-- Close dropdown when clicking elsewhere
+					local connection
+					connection = UserInputService.InputBegan:Connect(function(input)
+						if input.UserInputType == Enum.UserInputType.MouseButton1 then
+							local mousePos = UserInputService:GetMouseLocation()
+							local absPos = DropdownMenu.AbsolutePosition
+							local absSize = DropdownMenu.AbsoluteSize
+							
+							if not (mousePos.X >= absPos.X and mousePos.X <= absPos.X + absSize.X and
+									mousePos.Y >= absPos.Y and mousePos.Y <= absPos.Y + absSize.Y) then
+								
+								TweenService:Create(DropdownMenu, TweenInfo.new(0.2), {
+									Size = UDim2.new(1, 0, 0, 0)
+								}):Play()
+								task.wait(0.2)
+								DropdownMenu:Destroy()
+								connection:Disconnect()
+							end
+						end
 					end)
 				end)
 
